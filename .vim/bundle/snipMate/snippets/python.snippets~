@@ -1,14 +1,19 @@
 snippet #!
 	#!/usr/bin/python
 	# -*- coding: utf-8 -*-
-	""" ${1:one_line_description}
-	"""
-	__author__ = '`g:snips_author`'
-	__license__ = 'MIT@`system("date +%Y-%m")`'
-	${2}
+	'''
+	Author: `g:snips_author`
+	Create at: `system("date +%Y-%m-%d")`
+	Description: ${1}
+	'''
 snippet imp
 	import ${1:module}
 # Module Docstring
+snippet docs
+	'''
+	Author: ${1:`g:snips_author`}
+	Description: ${2}
+	'''
 snippet wh
 	while ${1:condition}:
 		${2:# code...}
@@ -24,7 +29,7 @@ snippet cl
 			self.$4 = $4
 			${6}
 # Webpy Class
-snippet webcl
+snippet handler
 	class ${1:ClassName}():
 		def GET(self, ${2:args}):
 			pass
@@ -44,6 +49,14 @@ snippet deff
 snippet defs
 	def ${1:mname}(self, ${2:arg}):
 		${3:pass}
+# New Property
+snippet property
+	def ${1:foo}():
+		doc = "${2:The $1 property.}"
+		def fget(self):
+			${3:return self._$1}
+		def fset(self, value):
+			${4:self._$1 = value}
 # Lambda
 snippet ld
 	${1:var} = lambda ${2:vars} : ${3:action}
@@ -80,8 +93,5 @@ snippet ifmain
 	if __name__ == '__main__':
 		${1:main()}
 # __magic__
-snippet __
+snippet _
 	__${1:init}__${2}
-# pdb
-snippet pdb
-	import pdb;pdb.set_trace();

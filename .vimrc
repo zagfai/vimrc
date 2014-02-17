@@ -1,7 +1,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""
 " Maintainer:   Zagfai Kwong    @FOSU
-" Version: 0.1
-" Last Change:  July 24, 2012
+" Version: 0.2
+" Last Change:  May 13 2013
 "       
 " ~/.vimrc
 " For Ubuntu Term
@@ -27,7 +27,7 @@
     let g:mapleader = ","
 
     " this!
-    set nobackup
+    " set nobackup
 
 "***************** Files about *******************
     set tags+=./tags,./../tags,./*/tags,/home/zagfai/.vim/stltags
@@ -135,11 +135,15 @@
     "NERDTree
         "autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
+    "Snippet
+        let g:snips_author = "Zagfai"
+
 "************ Languages Settings *****************
     "************** Python Settings *************
     au! BufRead,BufNewFile *.pyw,*.py set filetype=python
     let g:python_highlight_all = 1
     autocmd Filetype python map <F5> :w<cr>:!clear<cr>:!python %<cr>
+    autocmd Filetype python map <F3> :ConqueTermVSplit ipython<cr>
     "autocmd Filetype python colorscheme wombat256
     
     "*************** IO Settings *************
@@ -161,6 +165,15 @@
     "*************** Bash Settings **************
     au! BufRead,BufNewFile *.sh set filetype=sh
     autocmd Filetype sh map <F5> :w<cr>:!clear<cr>:!bash %<cr>
+    
+    "**************** Dot Settings **************
+    au! BufRead,BufNewFile *.dot set filetype=dot
+    autocmd Filetype dot map <F5> :w<cr>:!clear<cr>:!dot -Tpng % -o %:r.png<cr>
+    autocmd Filetype dot map <F6> :w<cr>:!xdg-open %:r.png<cr>
+    
+    "**************** js Settings ***************
+    "au! BufRead,BufNewFile *.js set filetype=js
+    autocmd Filetype javascript map <F5> :w<cr>:!clear<cr>:!phantomjs %<cr>
 
 
 "****************** Mapping **********************
@@ -181,7 +194,6 @@
     map <F2> :NERDTree<cr>
     "map <F2> :MarksBrowser<cr>
     "imap <F2> <esc>:MarksBrowser<cr>a
-    "map <F3> :LUWalk<cr><cr>
     "map <C-F5> :call Debug()<cr><cr>/main<cr><F1>
     "map <C-F6> :nbclose<cr>:bd (clewn)_console<cr>:set showcmd<cr>
     map <F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q<cr><cr>
