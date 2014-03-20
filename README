@@ -4,6 +4,6 @@ vim configure files, including some other project sourcecodes.
 
 Usage
 ----------
-To your ~/ (home directory, *nix only), and clone this project.
+Go to your ~/ (home directory, *nix only), and clone this project.
 
     git clone https://github.com/zagfai/vimrc
