@@ -1,0 +1,16 @@
+VIMRC
+==========
+vim configure files, including some other project sourcecodes.
+
+Usage
+----------
+Go to your ~/ (home directory, *nix only), and clone this project.
+
+    git clone https://github.com/zagfai/vimrc
+
+
+Change
+----------
+
+- 2015-12-21 Three years have passed, make a change with Vundle and jedi-vim, make up the vimrc.
+
