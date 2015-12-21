@@ -241,6 +241,7 @@ call vundle#end()            " required
     map <space> za
 
     map <F2> :NERDTree<cr>
+    map <F3> :CommandT<cr>
     map <C-TAB> gt
     " nmap gr gT
 
