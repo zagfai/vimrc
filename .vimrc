@@ -4,7 +4,9 @@
 " Last Change:  Dec 20 2015
 " ~/.vimrc
 " For Ubuntu Term, base on Ubuntu 14.04
-" Needed:
+" Need to do:
+"    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+"    :PluginInstall
 "
 "    sudo apt-get install vim-gtk # for beautiful
 "
