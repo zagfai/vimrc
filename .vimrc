@@ -32,7 +32,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'taglist.vim'
 Plugin 'tlib'
 Plugin 'L9'
-Plugin 'Lokaltog/vim-powerline'
+Plugin 'bling/vim-airline'
 Plugin 'wincent/Command-T'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}   " HTML writter
 Plugin 'Yggdroot/indentLine'
@@ -111,7 +111,7 @@ call vundle#end()            " required
     highlight StatusLineNC ctermfg=Gray ctermbg=darkyellow
 
     " changing the shape of cursor
-    if has("autocmd") 
+    if executable("gconftool-2") 
       au InsertEnter * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam" 
       au InsertLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block" 
       au VimLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block" 
