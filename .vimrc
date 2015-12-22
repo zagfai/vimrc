@@ -59,6 +59,9 @@ call vundle#end()            " required
     set clipboard=unnamedplus
     set history=1000
     set mouse=v
+    if executable("gconftool-2") 
+        set mouse=a
+    endif
     let mapleader = ","
     let g:mapleader = ","
 
@@ -107,8 +110,8 @@ call vundle#end()            " required
     set background=dark
     colorscheme slate 
 
-    highlight StatusLine   ctermfg=Black ctermbg=Yellow
-    highlight StatusLineNC ctermfg=Gray ctermbg=darkyellow
+    "highlight StatusLine   ctermfg=Black ctermbg=Yellow
+    "highlight StatusLineNC ctermfg=Gray ctermbg=darkyellow
 
     " changing the shape of cursor
     if executable("gconftool-2") 
@@ -117,13 +120,17 @@ call vundle#end()            " required
       au VimLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block" 
     endif 
 
+    if has("autocmd")
+      au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+    endif
+
 
 "******************** Plugin ************************
     " powerline
-        set guifont=PowerlineSymbols\ for\ Powerline
+        "set guifont=PowerlineSymbols\ for\ Powerline
         set laststatus=2
-        let g:Powerline_symbols = 'fancy'
-        let Powerline_symbols = 'compatible'
+        "let g:Powerline_symbols = 'fancy'
+        "let Powerline_symbols = 'compatible'
 
     " taglist
         let Tlist_Ctags_Cmd='ctags'
@@ -190,6 +197,10 @@ call vundle#end()            " required
         let g:jedi#goto_assignments_command = "<leader>g"
         let g:jedi#goto_definitions_command = "<leader>f"
         let g:jedi#rename_command = "<leader>r"
+        let g:jedi#usages_command = ""
+        let g:jedi#documentation_command = "K"
+        let g:jedi#completions_command = ""
+
 
 
 "************ Languages Settings *****************
@@ -232,6 +243,7 @@ call vundle#end()            " required
 
 "****************** Mapping **********************
     nmap <leader>q :qa<cr>
+    nmap <leader>l :set nu!<cr>
     "nmap <leader>w :w!<cr>
     map <leader>n :nohl<cr>
 
