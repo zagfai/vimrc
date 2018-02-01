@@ -1,9 +1,9 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""
 " Maintainer:   Zagfai Kwong  @Kingsoft
-" Version: 0.3
-" Last Change:  Dec 20 2015
+" Version: 0.4
+" Last Change:  Jan 30 2018
 " ~/.vimrc
-" For Ubuntu Term, base on Ubuntu 14.04
+" For Ubuntu Term, base on Ubuntu 16.04
 " Need to do:
 "    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 "    :PluginInstall
@@ -22,28 +22,43 @@ call vundle#begin() "call vundle#begin('~/some/path/here')
 Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'scrooloose/nerdtree'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'SuperTab'
-Plugin 'snipMate'
-"Plugin 'Shougo/neocomplete.vim'
-Plugin 'vim-scripts/pydoc.vim'
+Plugin 'w0rp/ale' " syn spill check
+Plugin 'ervandew/supertab'
+
+"Plugin 'MarcWeber/vim-addon-mw-utils'
+"Plugin 'tomtom/tlib_vim'
+"Plugin 'garbas/vim-snipmate'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-scripts/DirDiff.vim'
-Plugin 'pyflakes.vim'
-Plugin 'pangloss/vim-javascript'
-Plugin 'taglist.vim'
-Plugin 'tlib'
-Plugin 'L9'
 Plugin 'bling/vim-airline'
-Plugin 'wincent/Command-T'
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}   " HTML writter
 Plugin 'Yggdroot/indentLine'
 Plugin 'kien/rainbow_parentheses.vim'
-"Plugin 'ConqueTerm'                          " ConqueTerm 分屏命令行
-"Plugin 'tpope/vim-fugitive'                  " merge git 文件冲突插件
+Plugin 'wincent/Command-T'
+
+Plugin 'vim-scripts/pydoc.vim'
+
 call vundle#end()            " required
 " :PluginList       - lists configured plugins
 " :PluginInstall    - installs plugins; append `!` to update == :PluginUpdate
 " :PluginSearch foo - searches for foo; append `!` to refresh local cache
+"
+"Plugin 'ervandew/supertab'
+"Plugin 'scrooloose/syntastic'
+"Plugin 'nvie/vim-flake8'
+"Plugin 'Shougo/neocomplete.vim'
+"Plugin 'vim-scripts/pydoc.vim'
+"Plugin 'pyflakes.vim'
+"Plugin 'pangloss/vim-javascript'
+"Plugin 'taglist.vim'
+"Plugin 'tlib'
+"Plugin 'L9'
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}   " HTML writter
+"Plugin 'ConqueTerm'                          " ConqueTerm 分屏命令行
+"Plugin 'tpope/vim-fugitive'                  " merge git 文件冲突插件
 
 
 "********************* Basic ************************
@@ -60,9 +75,9 @@ call vundle#end()            " required
     set clipboard=unnamedplus
     set history=1000
     set mouse=v
-    if executable("gconftool-2") 
-        set mouse=a
-    endif
+    "if executable("gconftool-2")
+    "set mouse=a
+    "endif
     let mapleader = ","
     let g:mapleader = ","
 
@@ -70,6 +85,7 @@ call vundle#end()            " required
 
     set completeopt+=longest
     set completeopt+=menu
+    "set completeopt-=preview
     set wildmenu
 
 
@@ -77,14 +93,14 @@ call vundle#end()            " required
     "set guifont=Mono\ 13
     set t_Co=256
     set shortmess=at "I
-    
+
     set backspace=indent,eol,start
     set whichwrap+=<,>,h,l,b,s
     set iskeyword+=_,$,@,%,#,-
     set smartindent
 
     set foldmethod=indent
-    set foldlevel=5
+    set foldlevel=8
 
     set tabstop=8
     set expandtab
@@ -109,17 +125,22 @@ call vundle#end()            " required
     syntax on
     filetype plugin indent on
     set background=dark
-    colorscheme slate 
+    colorscheme slate
 
     "highlight StatusLine   ctermfg=Black ctermbg=Yellow
     "highlight StatusLineNC ctermfg=Gray ctermbg=darkyellow
 
     " changing the shape of cursor
-    if executable("gconftool-2") 
-      au InsertEnter * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam" 
-      au InsertLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block" 
-      au VimLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block" 
-    endif 
+    if has("autocmd")
+          au VimEnter,InsertLeave * silent execute '!echo -ne "\e[1 q"' | redraw!
+            au InsertEnter,InsertChange *
+                \ if v:insertmode == 'i' |
+                \   silent execute '!echo -ne "\e[5 q"' | redraw! |
+                \ elseif v:insertmode == 'r' |
+                \   silent execute '!echo -ne "\e[3 q"' | redraw! |
+                \ endif
+              au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
+          endif
 
     if has("autocmd")
       au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -128,20 +149,10 @@ call vundle#end()            " required
 
 "******************** Plugin ************************
     " powerline
-        "set guifont=PowerlineSymbols\ for\ Powerline
+        set guifont=PowerlineSymbols\ for\ Powerline
         set laststatus=2
-        "let g:Powerline_symbols = 'fancy'
-        "let Powerline_symbols = 'compatible'
-
-    " taglist
-        let Tlist_Ctags_Cmd='ctags'
-        let Tlist_Show_One_File=1
-        let Tlist_WinWidt =28
-        "let Tlist_Exit_OnlyWindow=1
-        "let Tlist_Use_Right_Window=1 "let Tlist_Use_Left_Windo =1
-
-    " nerdtree
-        map <F2> :NERDTree<cr>
+        let g:Powerline_symbols = 'fancy'
+        let Powerline_symbols = 'compatible'
 
     " rainbow_parentheses
         let g:rbpt_colorpairs = [
@@ -161,7 +172,6 @@ call vundle#end()            " required
             \ ['darkred',     'DarkOrchid3'],
             \ ['red',         'firebrick3'],
             \ ]
-
         let g:rbpt_max = 16
         let g:rbpt_loadcmd_toggle = 0
         au VimEnter * RainbowParenthesesToggle
@@ -169,49 +179,53 @@ call vundle#end()            " required
         au Syntax * RainbowParenthesesLoadSquare
         au Syntax * RainbowParenthesesLoadBraces
 
-    " Supertab
-        let g:SuperTabRetainCompletionType = 2
-        let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
-        let g:SuperTabMappingForward="<tab>"
-
-    " NeoCompl
-        "let g:neocomplcache_enable_at_startup = 1 
-        "let g:neocomplcache_enable_smart_case = 1 
-        "let g:neocomplcache_disable_auto_complete = 1 
-        " Enable omni completion.
-        "autocmd FileType css set omnifunc=csscomplete#CompleteCSS
-        "autocmd FileType html,markdown set omnifunc=htmlcomplete#CompleteTags
-        "autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-        "autocmd FileType python set omnifunc=pythoncomplete#Complete
-        "autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
-        "autocmd Filetype cpp set omnifunc=cppcomplete#Complete
-        "autocmd Filetype c set omnifunc=ccomplete#Complete
-
     " Snippet
         let g:snips_author = "Zagfai"
-    
-    " jedi-vim
-        "let g:jedi#use_tabs_not_buffers = 1
-        let g:jedi#popup_on_dot = 0
-        autocmd FileType python setlocal completeopt-=preview
-        let g:jedi#goto_command = "<leader>d"
-        let g:jedi#goto_assignments_command = "<leader>g"
-        let g:jedi#goto_definitions_command = "<leader>f"
-        let g:jedi#rename_command = "<leader>r"
-        let g:jedi#usages_command = ""
-        let g:jedi#documentation_command = "K"
-        let g:jedi#completions_command = ""
 
+    " Supertab
+        "let g:SuperTabRetainCompletionType = 2
+        "let g:SuperTabDefaultCompletionType = '<c-o>'
+        "let g:SuperTabDefaultCompletionType = 'context'
+        "let g:SuperTabMappingForward='<tab>'
+        "let g:SuperTabMappingBackward='<s-tab>'
+        "let g:SuperTabClosePreviewOnPopupClose = 1
+
+    " ale  - Check Python files with flake8 and pylint.
+        let b:ale_linters = ['flake8', 'pylint']
+        " Fix Python files with autopep8 and yapf.
+        let b:ale_fixers = ['autopep8', 'yapf']
+        " Disable warnings about trailing whitespace for Python files.
+        let b:ale_warn_about_trailing_whitespace = 0
+        "highlight ALEWarning ctermbg=DarkMagenta
+        let g:ale_python_pylint_options = '--rcfile ./pylint.rc'
+        let g:ale_python_pylint_executable = 'python3'
+
+    " folder
+        let g:SimpylFold_docstring_preview=1
+
+    " YCM
+        let g:ycm_key_list_select_completion = ['<c-n>', '<Down>']
+        let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>']
+        let g:ycm_python_binary_path='python3'
+        let g:ycm_autoclose_preview_window_after_completion=1
+
+    " Ultisnips
+        let g:UltiSnipsExpandTrigger = "<tab>"
+        let g:UltiSnipsJumpForwardTrigger = "<tab>"
+        let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+    " Supertab
+        let g:SuperTabDefaultCompletionType = '<c-n>'
 
 
 "************ Languages Settings *****************
     "************** Python Settings *************
     au! BufRead,BufNewFile *.pyw,*.py set filetype=python
     let g:python_highlight_all = 1
-    autocmd Filetype python map <F5> :w<cr>:!clear<cr>:!python %<cr>
+    autocmd Filetype python map <F5> :w<cr>:!clear<cr>:!python3 %<cr>
     "autocmd Filetype python map <F3> :ConqueTermVSplit ipython<cr>
     "autocmd Filetype python colorscheme wombat256
-    
+
     "*************** IO Settings *************
     au! BufRead,BufNewFile *.io set filetype=io
     autocmd Filetype io map <F5> :w<cr>:!clear<cr>:!io %<cr>
@@ -231,18 +245,19 @@ call vundle#end()            " required
     "*************** Bash Settings **************
     au! BufRead,BufNewFile *.sh set filetype=sh
     autocmd Filetype sh map <F5> :w<cr>:!clear<cr>:!bash %<cr>
-    
+
     "**************** Dot Settings **************
     au! BufRead,BufNewFile *.dot set filetype=dot
     autocmd Filetype dot map <F5> :w<cr>:!clear<cr>:!dot -Tpng % -o %:r.png<cr>
     autocmd Filetype dot map <F6> :w<cr>:!xdg-open %:r.png<cr>
-    
+
     "**************** js Settings ***************
     "au! BufRead,BufNewFile *.js set filetype=js
     autocmd Filetype javascript map <F5> :w<cr>:!clear<cr>:!phantomjs %<cr>
 
 
 "****************** Mapping **********************
+    map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
     nmap <leader>q :qa<cr>
     nmap <leader>l :set nu!<cr>
     "nmap <leader>w :w!<cr>
@@ -250,12 +265,12 @@ call vundle#end()            " required
 
     "nmap <s-q> <c-w>w:set showcmd<cr>
 
-    " space 
+    " space
     map <space> za
 
     map <F2> :NERDTree<cr>
     map <F3> :CommandT<cr>
-    map <C-TAB> gt
+    "map <C-TAB> gt
     " nmap gr gT
 
     " Fx Mapping
@@ -264,5 +279,4 @@ call vundle#end()            " required
     "map <C-F5> :call Debug()<cr><cr>/main<cr><F1>
     "map <C-F6> :nbclose<cr>:bd (clewn)_console<cr>:set showcmd<cr>
     "map <F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q<cr><cr>
-
 
