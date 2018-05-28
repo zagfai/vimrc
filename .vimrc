@@ -1,7 +1,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""
 " Maintainer:   Zagfai Kwong  @Kingsoft
 " Version: 0.4
-" Last Change:  Jan 30 2018
+" Last Change:  May 28 2018
 " ~/.vimrc
 " For Ubuntu Term, base on Ubuntu 16.04
 " Need to do:
@@ -112,7 +112,8 @@ call vundle#end()            " required
     "set ruler
     "set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%)
     set showcmd
-    set nu
+    "set nu
+    set relativenumber
 
     "set listchars=tab:'`,trail:`
     "set list
@@ -145,6 +146,10 @@ call vundle#end()            " required
     if has("autocmd")
       au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
     endif
+
+    let g:html_indent_script1 = "inc" 
+    let g:html_indent_style1 = "inc" 
+    let g:html_indent_inctags = "html,body,head"
 
 
 "******************** Plugin ************************
@@ -223,6 +228,7 @@ call vundle#end()            " required
     au! BufRead,BufNewFile *.pyw,*.py set filetype=python
     let g:python_highlight_all = 1
     autocmd Filetype python map <F5> :w<cr>:!clear<cr>:!python3 %<cr>
+    autocmd Filetype python map <F6> :w<cr>:!clear<cr>:!python %<cr>
     "autocmd Filetype python map <F3> :ConqueTermVSplit ipython<cr>
     "autocmd Filetype python colorscheme wombat256
 
@@ -279,4 +285,3 @@ call vundle#end()            " required
     "map <C-F5> :call Debug()<cr><cr>/main<cr><F1>
     "map <C-F6> :nbclose<cr>:bd (clewn)_console<cr>:set showcmd<cr>
     "map <F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q<cr><cr>
-
