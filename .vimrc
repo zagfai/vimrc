@@ -1,9 +1,9 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""
-" Maintainer:   Zagfai Kwong  @Kingsoft
-" Version: 0.4
-" Last Change:  May 28 2018
+" Maintainer:   Zagfai Kwong
+" Version: 0.5
+" Last Change:  Mar 16 2021
 " ~/.vimrc
-" For Ubuntu Term, base on Ubuntu 16.04
+" For Ubuntu Term, base on Ubuntu 20.04
 " Need to do:
 "    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 "    :PluginInstall
@@ -12,6 +12,8 @@
 "
 "    sudo apt-get install rake ruby-dev # for command-T
 "    cd to command-T dir, run command 'rake make'
+"
+"    cd to tabnine-vim, python3 install.py
 """""""""""""""""""""""""""""""""""""""""""""""""""
 
 "***************** Vundle install *******************
@@ -24,6 +26,7 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'w0rp/ale' " syn spill check
 Plugin 'ervandew/supertab'
+Plugin 'Chiel92/vim-autoformat'
 
 "Plugin 'MarcWeber/vim-addon-mw-utils'
 "Plugin 'tomtom/tlib_vim'
@@ -31,13 +34,15 @@ Plugin 'ervandew/supertab'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
+Plugin 'zxqfl/tabnine-vim'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-scripts/DirDiff.vim'
 Plugin 'bling/vim-airline'
 Plugin 'Yggdroot/indentLine'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'wincent/Command-T'
+Plugin 'dhruvasagar/vim-table-mode'
 
 Plugin 'vim-scripts/pydoc.vim'
 
@@ -109,10 +114,10 @@ call vundle#end()            " required
     set modeline
 
     set mousehide
-    "set ruler
-    "set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%)
+    set ruler
+    set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\ %p%%%)
     set showcmd
-    "set nu
+    set nu
     set relativenumber
 
     "set listchars=tab:'`,trail:`
@@ -147,8 +152,8 @@ call vundle#end()            " required
       au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
     endif
 
-    let g:html_indent_script1 = "inc" 
-    let g:html_indent_style1 = "inc" 
+    let g:html_indent_script1 = "inc"
+    let g:html_indent_style1 = "inc"
     let g:html_indent_inctags = "html,body,head"
 
 
@@ -204,6 +209,7 @@ call vundle#end()            " required
         "highlight ALEWarning ctermbg=DarkMagenta
         let g:ale_python_pylint_options = '--rcfile ./pylint.rc'
         let g:ale_python_pylint_executable = 'python3'
+        " let g:ale_echo_cursor = 0
 
     " folder
         let g:SimpylFold_docstring_preview=1
@@ -222,6 +228,12 @@ call vundle#end()            " required
     " Supertab
         let g:SuperTabDefaultCompletionType = '<c-n>'
 
+    " NerdTree
+    " enable line numbers
+    let NERDTreeShowLineNumbers=1
+    " make sure relative line numbers are used
+    autocmd FileType nerdtree setlocal relativenumber
+
 
 "************ Languages Settings *****************
     "************** Python Settings *************
@@ -229,6 +241,7 @@ call vundle#end()            " required
     let g:python_highlight_all = 1
     autocmd Filetype python map <F5> :w<cr>:!clear<cr>:!python3 %<cr>
     autocmd Filetype python map <F6> :w<cr>:!clear<cr>:!python %<cr>
+    autocmd Filetype python map <F7> :w<cr>:!clear<cr>:!python3 server.py -t test -p 8000%<cr>
     "autocmd Filetype python map <F3> :ConqueTermVSplit ipython<cr>
     "autocmd Filetype python colorscheme wombat256
 
@@ -263,13 +276,16 @@ call vundle#end()            " required
 
 
 "****************** Mapping **********************
-    map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
-    nmap <leader>q :qa<cr>
-    nmap <leader>l :set nu!<cr>
-    "nmap <leader>w :w!<cr>
+    map <leader>d :YcmCompleter GoToDefinitionElseDeclaration<CR>
+    map <leader>D <C-o>
+    nmap <leader>q :q<cr>
+    nmap <leader>Q :qa<cr>
     map <leader>n :nohl<cr>
 
-    "nmap <s-q> <c-w>w:set showcmd<cr>
+    map <C-j> <C-W>j
+    map <C-k> <C-W>k
+    map <C-h> <C-W>h
+    map <C-l> <C-W>l
 
     " space
     map <space> za
@@ -285,3 +301,4 @@ call vundle#end()            " required
     "map <C-F5> :call Debug()<cr><cr>/main<cr><F1>
     "map <C-F6> :nbclose<cr>:bd (clewn)_console<cr>:set showcmd<cr>
     "map <F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q<cr><cr>
+
